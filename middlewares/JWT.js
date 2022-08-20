@@ -1,6 +1,7 @@
+require("dotenv").config();
 const { sign, verify } = require("jsonwebtoken");
 const createTokens = ({ username }) => {
-  const accessToken = sign({ username: username }, "privatekeygoeshere", {
+  const accessToken = sign({ username: username }, process.env.PRIVATE_KEY, {
     expiresIn: "10d",
   });
   return accessToken;
@@ -14,7 +15,7 @@ const verifyToken = (req, res, next) => {
   }
 
   try {
-    const validToken = verify(accessToken, "privatekeygoeshere");
+    const validToken = verify(accessToken, process.env.PRIVATE_KEY);
     if (validToken) {
       req.authenticated = true;
       return next();
