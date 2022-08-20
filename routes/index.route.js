@@ -1,7 +1,5 @@
-const { verifyToken } = require("../middlewares/jwt");
-
 function route(app) {
-  app.use("/auth", verifyToken, require("./auth.route"));
+  app.use("/api/auth", require("./api.route"));
 }
 
 module.exports = route;
