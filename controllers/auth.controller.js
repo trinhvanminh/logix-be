@@ -31,6 +31,13 @@ class AuthController {
       message: "Hello World!",
     });
   }
+
+  // GET /reset-password/confirm/:id-token
+  confirmResetPassword(req, res, next) {
+    res.json({
+      message: "Hello World!",
+    });
+  }
 }
 
 module.exports = new AuthController();
