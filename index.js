@@ -25,10 +25,14 @@ route(app);
 
 // CONNECT DB
 mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => console.log("Mongodb connected successfully"))
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("Mongodb connected successfully");
+    app.listen(port, () => {
+      console.log(`Server listening at http://localhost:${port}`);
+    });
+  })
   .catch((err) => console.log(err));
-
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
-});
