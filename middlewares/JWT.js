@@ -1,7 +1,7 @@
 require("dotenv").config();
 const { sign, verify } = require("jsonwebtoken");
 const createTokens = (userId) => {
-  const accessToken = sign({ userId }, process.env.ACCESS_TOKEN_SECRET, {
+  const accessToken = sign({ userId }, process.env.JWT_SECRET, {
     expiresIn: "10d",
   });
   return accessToken;
@@ -17,7 +17,7 @@ const verifyToken = (req, res, next) => {
       .json({ success: false, message: "Access token not found" });
 
   try {
-    const decoded = verify(token, process.env.ACCESS_TOKEN_SECRET);
+    const decoded = verify(token, process.env.JWT_SECRET);
     req.userId = decoded.userId;
     next();
   } catch (error) {
