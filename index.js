@@ -2,7 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 const route = require("./routes/index.route");
-const morgan = require("morgan");
+// const morgan = require("morgan");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
