@@ -14,14 +14,6 @@ const moviesSchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
-  rate: {
-    type: Number,
-    required: false,
-  },
-  dislike: {
-    type: Number,
-    required: false,
-  },
   createdAt: {
     type: Date,
     default: Date.now,

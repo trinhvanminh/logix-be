@@ -1,3 +1,4 @@
+const ObjectId = require("bson").ObjectId;
 const Movies = require("../models/movies.model");
 const Rate = require("../models/rate.model");
 const { verify } = require("jsonwebtoken");
@@ -19,8 +20,8 @@ const MoviesController = {
           .json({ success: false, message: "Movies not found" });
 
       if (userId) {
+        // insert my_rate_status
         const my_rates = await Rate.find({ user_id: userId });
-
         const newMovies = JSON.parse(JSON.stringify(movies)).map((movie) => {
           const my_rate_status = my_rates.find((rate) =>
             rate.movie_id.equals(movie._id)
@@ -29,9 +30,46 @@ const MoviesController = {
           return movie;
         });
 
+        //insert like, dislike, rate
+        const moviesWithMetadata = newMovies.map((movie) => {
+          const getMovieLikeDislikes = async () => {
+            const movie_rates = await Rate.find({
+              movie_id: ObjectId(movie._id),
+            });
+            if (!movie_rates) return movie;
+
+            let like_count = 0;
+            let dislike_count = 0;
+
+            movie_rates.forEach((movie_rate) => {
+              if (movie_rate?.rate_status === 1) like_count++;
+              if (movie_rate?.rate_status === -1) dislike_count++;
+            });
+
+            if (like_count === 0)
+              return {
+                like_count,
+                dislike_count,
+                rate: 0,
+              };
+
+            const rate = parseInt(
+              (like_count / (like_count + dislike_count)) * 5
+            );
+
+            return { like_count, dislike_count, rate };
+          };
+          return getMovieLikeDislikes().then((res) => ({
+            ...movie,
+            ...res,
+          }));
+        });
+
+        const listValues = await Promise.all(moviesWithMetadata);
+
         return res.status(200).json({
           success: true,
-          movies: newMovies,
+          movies: listValues,
         });
       }
 

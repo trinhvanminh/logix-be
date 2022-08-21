@@ -46,16 +46,30 @@ const RateController = {
     }
   },
 
-  // PATCH /:id
+  // PATCH /:movie_id
   updateRate: async (req, res) => {
-    const { id } = req.params;
-    const payload = req.body;
+    const { movie_id } = req.params;
+    const { rate_status } = req.body;
+    const user_id = req.userId;
+
+    if (!movie_id || (rate_status !== 0 && !rate_status)) {
+      return res.status(400).json({
+        success: false,
+        message: "Please check your input",
+      });
+    }
 
     try {
       //find one and update
-      const rate = await Rate.findOneAndUpdate({ _id: id }, payload, {
-        new: true,
-      });
+      // const rate = await Rate.findOneAndUpdate({ _id: id }, payload, {
+      //   new: true,
+      // });
+      //create or update
+      const rate = await Rate.update(
+        { movie_id, user_id },
+        { rate_status },
+        { upsert: true, setDefaultsOnInsert: true }
+      );
 
       if (!rate)
         return res.status(400).json({
@@ -66,7 +80,7 @@ const RateController = {
       // All good
       res.json({
         success: true,
-        message: "Rate updated successfully",
+        message: "Rate created/updated successfully",
         rate,
       });
     } catch (error) {
