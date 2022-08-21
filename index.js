@@ -19,7 +19,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 //	HTTP logger
-app.use(morgan("combined"));
+// app.use(morgan("combined"));
 
 app.use(cors());
 
