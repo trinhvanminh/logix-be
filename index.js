@@ -6,6 +6,7 @@ const morgan = require("morgan");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
+const cors = require("cors");
 
 const port = process.env.PORT || 5000;
 
@@ -19,6 +20,8 @@ app.use(express.static(path.join(__dirname, "public")));
 
 //	HTTP logger
 app.use(morgan("combined"));
+
+app.use(cors());
 
 // Routes
 route(app);
